@@ -2,14 +2,10 @@ var HashEvents = new Class({
 	
 	Implements: [Options, Events],
 	
-		options: {
-			delimiter: '&'
-		},
-
 	initialize: function(options){
 		this.setOptions(options);
-		this.lastHash = '';
-		this.lastEvents = [];
+		this.pairs = {};
+		this.lastPairs = {};
 		this.bound = this.check.bind(this);
 		this.attach();
 	},
@@ -25,39 +21,55 @@ var HashEvents = new Class({
 	},
 	
 	check: function(){
-		var hash = window.location.hash;
 		this.fireEvent('change');
+		this.pairs = window.location.hash.substr(1).parseHashEvents();
 		
-		var hashEvents = hash.substr(1).split(this.options.delimiter).map(function(hashEvent){
-			return this.splitPair(hashEvent);
-		}.bind(this));
+		for (key in this.pairs){
+				// changed
+			if (this.lastPairs[key] && this.lastPairs[key] != this.pairs[key]) 
+				this.fireEvent(key + ':change', this.pairs[key]);
+			// added
+			else if (!this.lastPairs[key])
+				this.fireEvent(key, this.pairs[key])
+		}
 		
-		// check last hash pairs and fire remove events
-		console.group('Last Pairs');
-		this.lastEvents.each(function(pair){
-			console.log(pair);
-			//if (!eventPairs.contains(pair)) this.fireEvent(this.splitPair(pair)[0] + ':remove');
-		}, this);
-		console.groupEnd('Last Pairs');
-		
-		// add new pairs and fire events
-		hashEvents.each(function(hashEvent, index, array){
-			var args = this.splitArgs(hashEvent[1]);
-			this.fireEvent(hashEvent[0], args);
-		}.bind(this));
-		
-		this.lastEvents = hashEvents;
+		for (key in this.lastPairs){
+			// removed
+			!this.pairs[key] && this.fireEvent(key + ':remove', this.lastPairs[key]);
+		}
 
+		this.lastPairs = this.pairs;
 		return this;
 	},
-
 	
-	splitPair: function(hashKeyValue){
-		return hashKeyValue.split('=');
-	},
-	
-	splitArgs: function(args){
-		return (args) ? args.split(',') : false;
+	handleBlankKeys: function(val){
+		if ($type(val) == 'array'){
+			val.each(function(key){
+				console.log(key + ' added!');
+			}, this);
+		} else {
+			console.log(val + ' added!')
+		}
 	}
 
+});
+
+
+String.implement({
+
+	parseHashEvents: function(){
+		var vars = this.split(/[&;]/), res = {};
+		if (vars.length) vars.each(function(val){
+			var split = val.split('=');
+			var key = split[0],
+				value = split[1] || true;
+			var args = ($type(value) == 'string') ? value.split(',') : false;
+			if (args && args.length > 1)
+				res[key] = args;
+			else
+				res[key] = value;
+		});
+		return res;
+	}
+	
 });

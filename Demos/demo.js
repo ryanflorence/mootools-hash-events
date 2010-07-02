@@ -3,8 +3,8 @@ var manager;
 window.addEvent('domready',function(){
 		
 	var log = $('log');
-	var addLog = function(message, className){
-		className = className || 'added or changed';
+	var puts = function(message, className){
+		className = className || 'added';
 		log.adopt(new Element('p', { 'class': className, html: '[' + new Date().getTime() + '] - ' + message }));
 	};
 	
@@ -12,38 +12,58 @@ window.addEvent('domready',function(){
 	manager = new HashEvents();
 	
 	manager.addEvents({
+		
 		here: function(arg){
 			$('here').highlight();
-			addLog('added or changed <b>here</b>');
+			puts('added <b>here</b>');
 		},
 		'here:remove': function(){
-			addLog('removed or changed <b>here</b>', 'removed');
+			puts('removed <b>here</b>', 'removed');
 		},
+		'here:change': function(){
+			puts('changed <b>here</b>');
+		},
+		
 		there: function(one, two, three){
 			$('there').highlight();
-			addLog('added or changed <b>there</b> with args: ' + one + ', ' + two + ', ' + three);
+			puts('added <b>there</b> with args: ' + one + ', ' + two + ', ' + three);
 		},
 		'there:remove': function(){
-			addLog('removed or changed <b>there</b>', 'removed');
+			puts('removed <b>there</b>', 'removed');
 		},
+		'there:change': function(one, two, three){
+			puts('changed <b>there</b> with args: ' + one + ', ' + two + ', ' + three, 'changed');
+		},
+		
 		every: function(){
 			$('every').highlight();
-			addLog('added or changed <b>every</b>');
+			puts('added <b>every</b>');
 		},
+		'every:remove': function(){
+			puts('removed <b>every</b>', 'removed');
+		},
+		
 		where: function(){
 			$('where').highlight();
-			addLog('added or changed <b>where</b>');
+			puts('added <b>where</b>');
 		},
 		'where:remove': function(){
-			addLog('removed or changed <b>where</b>', 'removed');
+			puts('removed <b>where</b>', 'removed');
 		},
+		
 		'/some/path': function(){
 			$('some_path').highlight();
-			addLog('added <b>some/path</b>');
+			puts('added <b>some/path</b>');
 		},
+		'/some/path:remove': function(){
+			puts('removed <b>some/path</b>', 'removed');
+		},
+		
 		change: function(){
+			puts('----------------------------------------------------')
 			log.scrollTo.delay(100, log, [0, log.getScrollSize().y]);
 		}
+		
 	}).check();
 	
 });

@@ -13,4 +13,6 @@ a { color: #333; background: #ccc;}
 
 .removed { color: red;}
 
+.changed { color: orange;}
+
 b { color: #ccc; font-weight: normal;}

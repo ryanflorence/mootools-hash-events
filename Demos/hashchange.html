@@ -7,22 +7,23 @@ a { display:block; }
 </head>
 <body>
 
-<h1 id="container"></h1>
+<h1 id="container">fsdaf</h1>
 <ul>
 	<li><a id="here" href="#here">Here</a></li>
-	<li><a href="#here=46&amp;there=1,2,3">Here = 46 AND there = 1,2,3</a></li>
-	<li><a id="there" href="#there=cat,dog,sheep">There</a></li>
+	<!--<li><a href="#here=46&amp;there=1,2,3">Here = 46 AND there = 1,2,3</a></li> -->
+	<!-- <li><a id="there" href="#there=cat,dog,sheep">There</a></li> -->
 	<li><a id="every" href="#every">Every</a></li>
 	<li><a id="where" href="#where">Where</a></li>
-	<li><a id="some_path" href="#/some/path">/some/path</a></li>
+	<!-- <li><a id="some_path" href="#/some/path">/some/path</a></li> -->
 </ul>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/mootools/1.2.4/mootools-yui-compressed.js"></script>
 <script type="text/javascript" src="../Dependencies/Window.onhashchange.js"></script>
 <script type="text/javascript">
 window.addEvent('hashchange',function(hash) {
-	hash = hash.length>0 ? hash : '[empty]';
-	$('container').set('html',hash);
+	alert(hash)
+	var text = hash || '[empty]';
+	$('container').set('text', text);
 });
 </script>
 </body>

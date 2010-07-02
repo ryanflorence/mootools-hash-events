@@ -6,6 +6,7 @@
 	window.store('hashchange:implemented',!!('onhashchange' in window));
 
 	Element.Events.hashchange = {
+		
 		onAdd:function(fn) {
 			//clear the event
 			Element.Events.hashchange.onAdd = $empty;
@@ -13,21 +14,21 @@
 			//check the element
 			var self = $(this);
 			var checker = $empty;
-			if(self != $(window)) {
+			if (self != $(window)) {
 				return; //the window object only supports this
 			}
 
 			//this will prevent the browser from firing the url when the page loads (native onhashchange doesn't do this)
-			window.store('hashchange:changed',false);
+			window.store('hashchange:changed', false);
 
 			//this global method gets called when the hash value changes for all browsers
-			var hashchanged = function(hash,tostore) {
+			var hashchanged = function(hash, tostore) {
 				window.store('hashchange:current',tostore || hash);
-				if(window.retrieve('hashchange:changed')) {
+				if (window.retrieve('hashchange:changed')) {
 					hash = hash.trim();
-					if(hash.length==0) {
+					if (hash.length==0) {
 						var url = new String(window.location);
-						if(url.indexOf('#')>=0)
+						if (url.indexOf('#')>=0)
 						hash = '#';
 					}
 					window.fireEvent('hashchange',[hash]);
@@ -38,20 +39,20 @@
 			};
 
 			//this is used for when a hash change method has already been defined (futureproof)
-			if(typeof window.onhashchange == 'function' && fn !== window.onhashchange) {
+			if (typeof window.onhashchange == 'function' && fn !== window.onhashchange) {
 				//bind the method to the mootools method stack
-				window.addEvent('hashchange',window.onhashchange);
+				window.addEvent('hashchange', window.onhashchange);
 
 				//remove the event
 				window.onhashchange = null;
 			}
 
 			//Oldschool IE browsers
-			if(Browser.Engine.trident4 || Browser.Engine.trident5) { 
+			if (Browser.Engine.trident4 || Browser.Engine.trident5) { 
 
 				//IE6 and IE7 require an empty frame to relay the change (back and forward buttons)
 				//custom IE method
-				checker = function(url,frame) {
+				checker = function(url, frame) {
 
 					//clear the timer
 					var checker = window.retrieve('hashchange:checker');
@@ -64,10 +65,10 @@
 					var isEmpty = url == '#';
 					var hash, compare, cleanurl = unescape(new String(window.location));
 
-					if(isEmpty) {
+					if (isEmpty) {
 						compare = hash = '#';
 					}
-					else if(isNull) {
+					else if (isNull) {
 						compare = hash = '';	
 					}
 					else {
@@ -76,9 +77,9 @@
 						url = url != null ? url : cleanurl;
 						hash = url;
 
-						if(url.length>0) { //not an empty hash
+						if (url.length>0) { //not an empty hash
 							var index = url.indexOf('#');
-							if(index>=0)
+							if (index>=0)
 							hash = url.substr(index);
 						}
 
@@ -88,12 +89,12 @@
 
 					//if the hash value is different, then it has changed
 					var current = window.retrieve('hashchange:current');
-					if(current != compare) {
+					if (current != compare) {
 
 						//update the url
-						if(frame) {
+						if (frame) {
 							url = cleanurl;
-							if(current) {
+							if (current) {
 								url = url.replace(current,hash);
 							}
 							else {
@@ -106,9 +107,9 @@
 						var hasChanged = !frame && window.retrieve('hashchange:changed');
 
 						//change the hash
-						hashchanged(hash,compare);
+						hashchanged(hash, compare);
 
-						if(hasChanged) {
+						if (hasChanged) {
 							//this will prevent the frame from changing the first time
 							window.retrieve('hashchange:ieframe').setPath(hash);
 						}
@@ -135,19 +136,19 @@
 					'onload':function() {
 						//this shouldn't exist when a hash is changed, if it does then the frame has just loaded
 						var self = $('hashchange-ie-frame');
-						if(self.retrieve('loaded')) {
+						if (self.retrieve('loaded')) {
 							//examine the url
 							var url = unescape(new String(self.contentWindow.location));
 							//alert(url);
 							var index = url.indexOf('?');
-							if(index>=0) {
+							if (index>=0) {
 								var path = '', empty = false;
-								if(url.indexOf('?empty')>=0) {
+								if (url.indexOf('?empty')>=0) {
 									path = '#';
 								}
 								else {
 									index = url.indexOf('?!');
-									if(index>=0) {
+									if (index>=0) {
 										path = url.substr(index+2);
 										path = '#' + path;
 									}
@@ -167,9 +168,9 @@
 
 				var doc = ieframe.contentWindow;
 				ieframe.setPath = function(path) {
-					if(path.charAt(0)=='#') {
+					if (path.charAt(0)=='#') {
 						path = path.substr(1);
-						if(path.length==0) {
+						if (path.length==0) {
 							this.contentWindow.location = src + '?empty';
 							return;
 						}
@@ -177,7 +178,7 @@
 					this.contentWindow.location = src + '?!' + escape(path);
 				}.bind(ieframe);
 			}
-			else if(window.retrieve('hashchange:implemented')) { //Firefox 3.6, Chrome 5, IE8 all support the event natively
+			else if (window.retrieve('hashchange:implemented')) { //Firefox 3.6, Chrome 5, IE8 all support the event natively
 
 				//check the hashcheck
 				checker = window.onhashchange = function(hash) {
@@ -192,7 +193,7 @@
 			}
 			else { //Others
 				//opera requires a history mode to be set so that #hash values are recorded in history (back and forward buttons)
-				if(Browser.Engine.presto) {
+				if (Browser.Engine.presto) {
 					history.navigationMode='compatible';
 				}
 
@@ -208,11 +209,11 @@
 					//compare the hash
 					var hash = hash || new String(window.location.hash);
 					var compare = hash.toLowerCase();
-					if(hash.length==0 && new String(window.location).indexOf('#')>=0) {
+					if (hash.length==0 && new String(window.location).indexOf('#')>=0) {
 						compare = '#';
 					}
 					var current = window.retrieve('hashchange:current');
-					if(current != compare) {
+					if (current != compare) {
 						hashchanged(hash,compare);
 					}
 
@@ -229,16 +230,16 @@
 
 			//setup a custom go event
 			window.sethash = function(hash) {
-				if(hash.charAt(0)!='#')
+				if (hash.charAt(0)!='#')
 				hash = '#' + hash;
 				window.hashcheck(hash);
 			}
 		},
 
 		onDelete:function() {
-			if($(this) == $(window)) {
+			if ($(this) == $(window)) {
 				var timer = window.retrieve('hashchange:timer');
-				if(timer) {
+				if (timer) {
 					$clear(timer); timer = null;
 					window.store('hashchange:timer',null);
 				}
