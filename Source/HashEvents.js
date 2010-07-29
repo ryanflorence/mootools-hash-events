@@ -40,18 +40,8 @@ var HashEvents = new Class({
 
 		this.lastPairs = this.pairs;
 		return this;
-	},
-	
-	handleBlankKeys: function(val){
-		if ($type(val) == 'array'){
-			val.each(function(key){
-				console.log(key + ' added!');
-			}, this);
-		} else {
-			console.log(val + ' added!')
-		}
 	}
-
+	
 });
 
 
