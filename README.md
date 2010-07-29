@@ -4,6 +4,23 @@ HashEvents
 How to use
 ----------
 
+HashEvents picks up on changes to the url, whether the user manually types them in or you have internal links.  It follows the standard url query string pattern of key=value&otherkey=other,value.
+
+### HTML
+
+Set up some links that change the hash.
+
+    <ul>
+      <li><a id="here" href="#here">Here</a></li>
+      <li><a href="#here=46&amp;there=1,2,3">Here = 46 AND there = 1,2,3</a></li>
+      <li><a id="there" href="#there=cat,dog,sheep">There</a></li>
+      <li><a id="every" href="#every">Every</a></li>
+      <li><a id="where" href="#where">Where</a></li>
+      <li><a id="some_path" href="#/some/path">/some/path</a></li>
+    </ul>
+    <div id="log"></div>
+
+
     var manager;
 
     window.addEvent('domready',function(){
